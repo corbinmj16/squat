@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Squat Tracker</title>
+    <script type="module" crossorigin src="/assets/index-BLWJMhRb.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-BWdapKgP.css">
+  </head>
+  <body>
+    <div id="container">
+      <div id="camera-section">
+        <video id="video" autoplay playsinline></video>
+        <canvas id="canvas"></canvas>
+      </div>
+      
+      <div id="status-panel">
+        <h1>Squat Tracker</h1>
+        <div id="status-indicator" class="status-neutral">
+          <p>Initializing...</p>
+        </div>
+        
+        <div id="stats">
+          <div class="stat">
+            <label>Squat Depth:</label>
+            <p id="depth-value">--%</p>
+          </div>
+          <div class="stat">
+            <label>Status:</label>
+            <p id="status-text">Loading...</p>
+          </div>
+          <div class="stat">
+            <label>Reps:</label>
+            <p id="rep-count">0</p>
+          </div>
+        </div>
+
+        <div id="instructions">
+          <p>Stand in front of the camera and perform squats. The tracker will indicate when you reach the target depth (90 degrees at the knee).</p>
+        </div>
+      </div>
+    </div>
+    
+  </body>
+</html>
