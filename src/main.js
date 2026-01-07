@@ -19,7 +19,7 @@ const createPoseLandmarker = async () => {
   );
   poseLandmarker = await PoseLandmarker.createFromOptions(vision, {
     baseOptions: {
-      modelAssetPath: '/pose_landmarker_lite.task'
+      modelAssetPath: './pose_landmarker_lite.task'
     },
     runningMode: 'LIVE_STREAM'
   });
