@@ -210,7 +210,9 @@ const initializeCamera = async (facingMode = 'environment') => {
     // Get video stream from camera
     const stream = await navigator.mediaDevices.getUserMedia({
       video: {
-        facingMode: facingMode,
+        facingMode: {
+          exact: 'environment'
+        },
         width: { ideal: VIDEO_WIDTH },
         height: { ideal: VIDEO_HEIGHT }
       }
