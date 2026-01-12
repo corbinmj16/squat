@@ -54,8 +54,8 @@ const calculateSquatDepth = (landmarks) => {
 
   // Depth is inversely related to knee angle
   // At 180° (standing) = 0% depth
-  // At 90° (full squat) = 100% depth
-  const depth = Math.max(0, Math.min(100, ((180 - kneeAngle) / 90) * 100));
+  // At 80° (full squat) = 100% depth (10% deeper than 90°)
+  const depth = Math.max(0, Math.min(100, ((180 - kneeAngle) / 100) * 100));
 
   return {
     depth: Math.round(depth),
@@ -201,8 +201,8 @@ const detectPose = async () => {
   window.requestAnimationFrame(detectPose);
 };
 
-// Initialize
-const init = async () => {
+// Initialize camera with facing mode
+const initializeCamera = async (facingMode = 'environment') => {
   const video = document.getElementById('video');
   const canvas = document.getElementById('canvas');
 
@@ -210,6 +210,7 @@ const init = async () => {
     // Get video stream from camera
     const stream = await navigator.mediaDevices.getUserMedia({
       video: {
+        facingMode: facingMode,
         width: { ideal: VIDEO_WIDTH },
         height: { ideal: VIDEO_HEIGHT }
       }
@@ -239,6 +240,47 @@ const init = async () => {
     document.getElementById('status-indicator').innerHTML = '<p>Camera access denied</p>';
     document.getElementById('status-text').textContent = 'Error: Please enable camera access';
   }
+};
+
+// Check if device has multiple cameras and show selector
+const checkCameraSupport = async () => {
+  try {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    const cameras = devices.filter(device => device.kind === 'videoinput');
+    
+    if (cameras.length > 1) {
+      // Device has multiple cameras, show selector
+      document.getElementById('camera-selector').style.display = 'block';
+      
+      document.getElementById('front-camera-btn').addEventListener('click', () => {
+        document.getElementById('camera-selector').style.display = 'none';
+        initializeCamera('user');
+      });
+      
+      document.getElementById('rear-camera-btn').addEventListener('click', () => {
+        document.getElementById('camera-selector').style.display = 'none';
+        initializeCamera('environment');
+      });
+    } else if (cameras.length === 1) {
+      // Only one camera available, use default (front)
+      initializeCamera('user');
+    } else {
+      document.getElementById('status-indicator').innerHTML = '<p>No camera found</p>';
+      document.getElementById('status-text').textContent = 'Error: No camera available';
+    }
+  } catch (error) {
+    console.error('Camera enumeration error:', error);
+    // Fallback: try to initialize with default
+    initializeCamera('user');
+  }
+};
+
+// Initialize
+const init = async () => {
+  // Initialize MediaPipe first
+  await createPoseLandmarker();
+  // Then check camera support and show selector
+  checkCameraSupport();
 };
 
 // Start on page load
